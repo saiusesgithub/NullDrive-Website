@@ -1,0 +1,62 @@
+{
+  "files": {
+    "final_blend": "C:\\Users\\Saisr\\Desktop\\Coding\\NullDrive-Website\\blender\\HostLaptop_ND01_Web_Final.blend",
+    "validation_blend": "C:\\Users\\Saisr\\Desktop\\Coding\\NullDrive-Website\\blender\\HostLaptop_ND01_GLBRoundTrip.blend",
+    "glb": "C:\\Users\\Saisr\\Desktop\\Coding\\NullDrive-Website\\public\\models\\host-laptop-web.glb"
+  },
+  "cleanup": {
+    "removed_degenerate_faces": {
+      "Laptop_Trackpad": 12
+    }
+  },
+  "source_export_stats": {
+    "vertices": 4466,
+    "polygons": 3462,
+    "triangles": 6792
+  },
+  "round_trip": {
+    "passed": true,
+    "objects": 7,
+    "mesh_objects": 6,
+    "object_names": [
+      "HostLaptop_Root",
+      "Laptop_Base",
+      "Laptop_Display",
+      "Laptop_Keyboard",
+      "Laptop_Trackpad",
+      "USB_C_Port",
+      "USB_C_Port_Interior"
+    ],
+    "missing_objects": [],
+    "parent_map": {
+      "HostLaptop_Root": null,
+      "Laptop_Base": "HostLaptop_Root",
+      "Laptop_Display": "HostLaptop_Root",
+      "Laptop_Keyboard": "HostLaptop_Root",
+      "Laptop_Trackpad": "HostLaptop_Root",
+      "USB_C_Port": "HostLaptop_Root",
+      "USB_C_Port_Interior": "HostLaptop_Root"
+    },
+    "vertices": 7104,
+    "polygons": 6792,
+    "triangles": 6792,
+    "materials": [
+      "Host_Display_Bezel",
+      "Host_Graphite_Aluminium",
+      "Host_Keyboard_Black",
+      "Host_Screen_Off",
+      "Host_Trackpad",
+      "Host_USB_Port_Interior",
+      "Host_USB_Port_Metal"
+    ],
+    "material_count": 7,
+    "texture_count": 0,
+    "degenerate_polygons": {},
+    "negative_scales": [],
+    "nonunit_scales": [],
+    "cameras": 0,
+    "lights": 0,
+    "animations": 0,
+    "glb_size_bytes": 275324
+  }
+}
