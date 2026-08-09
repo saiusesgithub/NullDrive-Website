@@ -1,6 +1,6 @@
 import { useEffect, useLayoutEffect, useMemo, useRef } from 'react'
 import { useFrame, useThree } from '@react-three/fiber'
-import { ContactShadows, OrbitControls, useGLTF } from '@react-three/drei'
+import { OrbitControls, useGLTF } from '@react-three/drei'
 import * as THREE from 'three'
 import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js'
 
@@ -32,12 +32,29 @@ export const REQUIRED_NODES = [
 ]
 
 const EXPLODE_OFFSETS = {
-  Shell_Top: 0.038,
-  Upper_Shield: 0.024,
-  PCB_Main: 0.010,
-  Internal_Frame: -0.010,
-  Lower_Shield: -0.024,
-  Shell_Bottom: -0.038,
+  Shell_Top: 0.028,
+  Upper_Shield: 0.017,
+  PCB_Main: 0.007,
+  Connector_Housing: 0.007,
+  USB_C_Connector: 0.007,
+  Internal_Frame: -0.007,
+  Lower_Shield: -0.017,
+  Shell_Bottom: -0.028,
+}
+
+function detectLocalSeparationAxis(root) {
+  root.updateWorldMatrix(true, true)
+  const size = new THREE.Box3().setFromObject(root).getSize(new THREE.Vector3())
+  const dimensions = [
+    { label: 'X', value: size.x, direction: new THREE.Vector3(1, 0, 0) },
+    { label: 'Y', value: size.y, direction: new THREE.Vector3(0, 1, 0) },
+    { label: 'Z', value: size.z, direction: new THREE.Vector3(0, 0, 1) },
+  ]
+  const vertical = dimensions.reduce((smallest, dimension) => dimension.value < smallest.value ? dimension : smallest)
+  const inverseRoot = root.matrixWorld.clone().invert()
+  const localOrigin = new THREE.Vector3().applyMatrix4(inverseRoot)
+  const localDirection = vertical.direction.clone().applyMatrix4(inverseRoot).sub(localOrigin).normalize()
+  return { label: vertical.label, localDirection, size }
 }
 
 function ResponsiveModel({ mode, rootRotation, onLoaded }) {
@@ -46,6 +63,7 @@ function ResponsiveModel({ mode, rootRotation, onLoaded }) {
   const presentationGroup = useRef()
   const originals = useRef(new Map())
   const rootOriginalRotation = useRef(null)
+  const separationAxis = useRef(new THREE.Vector3(0, 1, 0))
 
   const nodes = useMemo(() => {
     const result = new Map()
@@ -67,7 +85,12 @@ function ResponsiveModel({ mode, rootRotation, onLoaded }) {
     })
 
     const root = nodes.get('NullDrive_Root')
-    if (root) rootOriginalRotation.current = root.rotation.clone()
+    let axisReport = null
+    if (root) {
+      rootOriginalRotation.current = root.rotation.clone()
+      axisReport = detectLocalSeparationAxis(root)
+      separationAxis.current.copy(axisReport.localDirection)
+    }
 
     const missing = REQUIRED_NODES.filter((name) => !nodes.has(name))
     let triangles = 0
@@ -93,6 +116,14 @@ function ResponsiveModel({ mode, rootRotation, onLoaded }) {
     console.table(hierarchy)
     if (missing.length) console.error(`[ND-01] Missing nodes: ${missing.join(', ')}`)
     else console.info(`[ND-01] All ${REQUIRED_NODES.length} required nodes detected.`)
+    if (axisReport) {
+      const { label, localDirection, size } = axisReport
+      console.info(
+        `[ND-01] Explosion axis verified from assembled bounds: world ${label}; ` +
+        `dimensions ${size.x.toFixed(3)} × ${size.y.toFixed(3)} × ${size.z.toFixed(3)}; ` +
+        `root-local (${localDirection.x.toFixed(3)}, ${localDirection.y.toFixed(3)}, ${localDirection.z.toFixed(3)}).`,
+      )
+    }
     console.groupEnd()
 
     onLoaded({ found: REQUIRED_NODES.length - missing.length, missing, triangles, textures: textures.size })
@@ -105,18 +136,31 @@ function ResponsiveModel({ mode, rootRotation, onLoaded }) {
     root.rotation.y += THREE.MathUtils.degToRad(rootRotation)
   }, [nodes, rootRotation])
 
+  const modelScale = size.width < 520 ? 14 : size.width < 820 ? 18 : 23
+
   useFrame((_, delta) => {
     const blend = 1 - Math.exp(-delta * 7)
     Object.entries(EXPLODE_OFFSETS).forEach(([name, offset]) => {
       const object = nodes.get(name)
       const original = originals.current.get(name)
       if (!object || !original) return
-      const targetY = original.position.y + (mode === 'exploded' ? offset : 0)
-      object.position.y = THREE.MathUtils.lerp(object.position.y, targetY, blend)
+      const separation = mode === 'exploded' ? offset : 0
+      const targetX = original.position.x + separationAxis.current.x * separation
+      const targetY = original.position.y + separationAxis.current.y * separation
+      const targetZ = original.position.z + separationAxis.current.z * separation
+      object.position.set(
+        THREE.MathUtils.lerp(object.position.x, targetX, blend),
+        THREE.MathUtils.lerp(object.position.y, targetY, blend),
+        THREE.MathUtils.lerp(object.position.z, targetZ, blend),
+      )
     })
-  })
 
-  const modelScale = size.width < 520 ? 14 : size.width < 820 ? 18 : 23
+    const framingScale = modelScale * (mode === 'exploded' ? 0.86 : 1)
+    if (presentationGroup.current) {
+      const currentScale = presentationGroup.current.scale.x
+      presentationGroup.current.scale.setScalar(THREE.MathUtils.lerp(currentScale, framingScale, blend))
+    }
+  })
 
   return (
     <group ref={presentationGroup} scale={modelScale} rotation={[0, -0.2, 0]} position={[0, 0.08, 0]}>
@@ -162,12 +206,6 @@ export function NullDriveScene({ mode, rootRotation, resetToken, onLoaded }) {
       <directionalLight position={[1, -3, 2]} intensity={1.15} color="#6f858b" />
 
       <ResponsiveModel mode={mode} rootRotation={rootRotation} onLoaded={onLoaded} />
-
-      <ContactShadows position={[0, -0.47, 0]} opacity={0.48} scale={5} blur={2.8} far={2.2} resolution={512} />
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.49, 0]} receiveShadow>
-        <planeGeometry args={[20, 20]} />
-        <meshBasicMaterial color="#050708" />
-      </mesh>
 
       <OrbitControls
         ref={controls}
