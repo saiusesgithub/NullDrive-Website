@@ -55,6 +55,12 @@ export function SceneLighting({ lightingApi }) {
         intensity={initial.underside}
         color="#6f858b"
       />
+      <directionalLight
+        ref={(light) => { lightingApi.current.host = light }}
+        position={[4.5, 1.4, 3.5]}
+        intensity={0}
+        color="#9bb9bd"
+      />
     </>
   )
 }

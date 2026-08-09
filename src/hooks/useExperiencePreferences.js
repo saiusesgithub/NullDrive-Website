@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { profileForWidth, SCENE_PROFILES } from '../animation/sceneConfig.js'
+import { CONNECTION_PROFILES, profileForWidth, SCENE_PROFILES } from '../animation/sceneConfig.js'
 
 function readPreferences() {
   const profileKey = profileForWidth(window.innerWidth)
@@ -7,6 +7,7 @@ function readPreferences() {
     debug: new URLSearchParams(window.location.search).get('debug') === 'true',
     profileKey,
     profile: SCENE_PROFILES[profileKey],
+    connectionProfile: CONNECTION_PROFILES[profileKey],
     reducedMotion: window.matchMedia('(prefers-reduced-motion: reduce)').matches,
   }
 }

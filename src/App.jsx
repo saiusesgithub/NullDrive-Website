@@ -2,6 +2,7 @@ import { Component, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { NullDriveScene } from './components/three/NullDriveScene.jsx'
 import { ChapterOne } from './components/chapters/ChapterOne.jsx'
+import { ChapterTwo } from './components/chapters/ChapterTwo.jsx'
 import { useExperiencePreferences } from './hooks/useExperiencePreferences.js'
 
 class WebGLErrorBoundary extends Component {
@@ -32,7 +33,7 @@ class WebGLErrorBoundary extends Component {
 }
 
 export default function App() {
-  const { debug, profileKey, profile, reducedMotion } = useExperiencePreferences()
+  const { connectionProfile, debug, profileKey, profile, reducedMotion } = useExperiencePreferences()
   const [sceneApi, setSceneApi] = useState(null)
   const [loaded, setLoaded] = useState(false)
 
@@ -51,7 +52,7 @@ export default function App() {
             camera={{ position: profile.camera, fov: 34, near: 0.01, far: 100 }}
             onCreated={({ gl }) => gl.setClearColor('#020304')}
           >
-            <NullDriveScene profile={profile} onReady={handleSceneReady} />
+            <NullDriveScene connectionProfile={connectionProfile} debug={debug} profile={profile} onReady={handleSceneReady} />
           </Canvas>
         </WebGLErrorBoundary>
       </div>
@@ -63,6 +64,14 @@ export default function App() {
       </div>
 
       <ChapterOne
+        debug={debug}
+        profile={profile}
+        reducedMotion={reducedMotion}
+        sceneApi={sceneApi}
+      />
+
+      <ChapterTwo
+        connectionProfile={connectionProfile}
         debug={debug}
         profile={profile}
         reducedMotion={reducedMotion}

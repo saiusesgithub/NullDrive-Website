@@ -79,6 +79,7 @@ export function NullDriveModel({ profile, lightingApi, onReady }) {
       originals,
       presentation: presentation.current,
       root,
+      rootOriginalPosition: root.position.clone(),
       rootOriginalRotation: root.rotation.clone(),
       scene,
     })
