@@ -1,0 +1,143 @@
+{
+  "glb": "C:\\Users\\Saisr\\Desktop\\Coding\\NullDrive-Website\\public\\models\\null-drive-nd01-web.glb",
+  "required_objects": {
+    "NullDrive_Root": true,
+    "Shell_Top": true,
+    "Upper_Shield": true,
+    "PCB_Main": true,
+    "Internal_Frame": true,
+    "Lower_Shield": true,
+    "Shell_Bottom": true,
+    "Connector_Housing": true,
+    "USB_C_Connector": true,
+    "USB_C_Tongue": true,
+    "Status_LED": true,
+    "Seam_Accent": true,
+    "Brand_NULLDRIVE": true,
+    "Brand_ND01": true,
+    "Controller_IC": true,
+    "NAND_01": true,
+    "NAND_02": true,
+    "Power_Management": true
+  },
+  "all_required_present": true,
+  "hierarchy": {
+    "NullDrive_Root": null,
+    "Shell_Top": "NullDrive_Root",
+    "Upper_Shield": "NullDrive_Root",
+    "PCB_Main": "NullDrive_Root",
+    "Internal_Frame": "NullDrive_Root",
+    "Lower_Shield": "NullDrive_Root",
+    "Shell_Bottom": "NullDrive_Root",
+    "Connector_Housing": "NullDrive_Root",
+    "USB_C_Connector": "NullDrive_Root",
+    "USB_C_Tongue": "USB_C_Connector",
+    "Status_LED": "Shell_Top",
+    "Seam_Accent": "NullDrive_Root",
+    "Brand_NULLDRIVE": "Shell_Top",
+    "Brand_ND01": "Shell_Top",
+    "Controller_IC": "PCB_Main",
+    "NAND_01": "PCB_Main",
+    "NAND_02": "PCB_Main",
+    "Power_Management": "PCB_Main"
+  },
+  "imported_object_count": 22,
+  "mesh_object_count": 21,
+  "vertices": 21206,
+  "polygons": 17000,
+  "triangles": 17000,
+  "dimensions_mm": [
+    91.0,
+    28.0,
+    9.014
+  ],
+  "center_mm": [
+    0.0,
+    0.0,
+    0.007
+  ],
+  "materials": [
+    "ND01_Branding",
+    "ND01_Copper",
+    "ND01_Cyan_Emissive",
+    "ND01_Exterior_Anodized",
+    "ND01_Gold_Contacts",
+    "ND01_IC_Black",
+    "ND01_PCB_Substrate",
+    "ND01_Passive_Ceramic",
+    "ND01_Shield_Graphite",
+    "ND01_Structural_Dark",
+    "ND01_USB_Satin",
+    "ND01_USB_Tongue"
+  ],
+  "material_count": 12,
+  "images": [
+    {
+      "name": "nd01-anodized-roughness",
+      "resolution": [
+        512,
+        512
+      ],
+      "packed": true
+    }
+  ],
+  "imported_camera_count": 0,
+  "imported_light_count": 0,
+  "animation_action_count": 0,
+  "branding_meshes_ok": true,
+  "cyan_emission_ok": true,
+  "zero_length_polygon_normals": 0,
+  "move_test": {
+    "Shell_Top": {
+      "requested_z": 0.01,
+      "world_delta": [
+        0.0,
+        0.0,
+        0.01
+      ]
+    },
+    "Upper_Shield": {
+      "requested_z": 0.006,
+      "world_delta": [
+        0.0,
+        0.0,
+        0.006
+      ]
+    },
+    "PCB_Main": {
+      "requested_z": 0.003,
+      "world_delta": [
+        0.0,
+        0.0,
+        0.003
+      ]
+    },
+    "Internal_Frame": {
+      "requested_z": -0.003,
+      "world_delta": [
+        0.0,
+        0.0,
+        -0.003
+      ]
+    },
+    "Lower_Shield": {
+      "requested_z": -0.006,
+      "world_delta": [
+        0.0,
+        0.0,
+        -0.006
+      ]
+    },
+    "Shell_Bottom": {
+      "requested_z": -0.01,
+      "world_delta": [
+        0.0,
+        0.0,
+        -0.01
+      ]
+    }
+  },
+  "moves_restored": true,
+  "validation_render": "C:\\Users\\Saisr\\Desktop\\Coding\\NullDrive-Website\\renders\\nd01_v5_roundtrip.png",
+  "validation_render_exists": true
+}
