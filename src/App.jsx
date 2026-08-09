@@ -1,11 +1,10 @@
-import { Component, Suspense, useCallback, useState } from 'react'
+import { Component, useCallback, useState } from 'react'
 import { Canvas } from '@react-three/fiber'
-import { Loader } from '@react-three/drei'
-import { NullDriveScene } from './components/NullDriveScene.jsx'
+import { NullDriveScene } from './components/three/NullDriveScene.jsx'
+import { ChapterOne } from './components/chapters/ChapterOne.jsx'
+import { useExperiencePreferences } from './hooks/useExperiencePreferences.js'
 
-const EXPECTED_NODE_COUNT = 22
-
-class AssetErrorBoundary extends Component {
+class WebGLErrorBoundary extends Component {
   constructor(props) {
     super(props)
     this.state = { error: null }
@@ -16,15 +15,15 @@ class AssetErrorBoundary extends Component {
   }
 
   componentDidCatch(error) {
-    this.props.onError(error)
+    console.error('[ND-01] WebGL scene failed:', error)
   }
 
   render() {
     if (this.state.error) {
       return (
-        <div className="asset-error" role="alert">
-          <strong>GLB LOAD FAILED</strong>
-          <span>{this.state.error.message}</span>
+        <div className="webgl-error" role="alert">
+          <span>ND-01 / VISUAL SYSTEM UNAVAILABLE</span>
+          <strong>THE PRODUCT STORY COULD NOT BE RENDERED.</strong>
         </div>
       )
     }
@@ -33,103 +32,44 @@ class AssetErrorBoundary extends Component {
 }
 
 export default function App() {
-  const [mode, setMode] = useState('assembled')
-  const [assetStatus, setAssetStatus] = useState('loading')
-  const [nodeReport, setNodeReport] = useState({ found: 0, missing: [], triangles: 0, textures: 0 })
-  const [rootRotation, setRootRotation] = useState(0)
-  const [resetToken, setResetToken] = useState(0)
+  const { debug, profileKey, profile, reducedMotion } = useExperiencePreferences()
+  const [sceneApi, setSceneApi] = useState(null)
+  const [loaded, setLoaded] = useState(false)
 
-  const handleLoaded = useCallback((report) => {
-    setAssetStatus('loaded')
-    setNodeReport(report)
+  const handleSceneReady = useCallback((api) => {
+    setSceneApi(api)
+    setLoaded(true)
   }, [])
 
-  const handleError = useCallback(() => setAssetStatus('failed'), [])
-
-  const resetView = () => {
-    setMode('assembled')
-    setRootRotation(0)
-    setResetToken((token) => token + 1)
-  }
-
   return (
-    <main className="validation-shell">
-      <header className="masthead">
-        <div>
-          <span className="wordmark">NULL//DRIVE</span>
-          <span className="model">ND-01</span>
-        </div>
-        <span className="test-label"><i /> WEBGL TEST</span>
-      </header>
-
-      <section className="viewport" aria-label="Interactive NullDrive model validation">
-        <AssetErrorBoundary onError={handleError}>
+    <main className={`cinematic-app profile-${profileKey}${reducedMotion ? ' reduced-motion' : ''}`}>
+      <div className="webgl-layer" aria-hidden="true">
+        <WebGLErrorBoundary>
           <Canvas
             dpr={[1, 1.75]}
             gl={{ antialias: true, alpha: false, powerPreference: 'high-performance' }}
-            camera={{ position: [2.7, 1.65, 3.25], fov: 34, near: 0.01, far: 100 }}
-            onCreated={({ gl }) => {
-              gl.setClearColor('#050708')
-              gl.domElement.dataset.renderer = 'webgl'
-            }}
+            camera={{ position: profile.camera, fov: 34, near: 0.01, far: 100 }}
+            onCreated={({ gl }) => gl.setClearColor('#020304')}
           >
-            <Suspense fallback={null}>
-              <NullDriveScene
-                mode={mode}
-                rootRotation={rootRotation}
-                resetToken={resetToken}
-                onLoaded={handleLoaded}
-              />
-            </Suspense>
+            <NullDriveScene profile={profile} onReady={handleSceneReady} />
           </Canvas>
-        </AssetErrorBoundary>
-        <Loader
-          containerStyles={{ background: '#050708' }}
-          innerStyles={{ background: '#20282b', width: '180px', height: '1px' }}
-          barStyles={{ background: '#4ed5d1', height: '1px' }}
-          dataStyles={{ color: '#718084', fontSize: '10px', letterSpacing: '0.16em' }}
-        />
-        <div className="axis-mark axis-mark--x">X</div>
-        <div className="axis-mark axis-mark--z">Z</div>
-      </section>
+        </WebGLErrorBoundary>
+      </div>
 
-      <footer className="control-deck">
-        <div className="buttons" role="group" aria-label="Model configuration">
-          <button className={mode === 'assembled' ? 'active' : ''} onClick={() => setMode('assembled')}>
-            ASSEMBLED
-          </button>
-          <button className={mode === 'exploded' ? 'active' : ''} onClick={() => setMode('exploded')}>
-            EXPLODED
-          </button>
-          <button onClick={resetView}>RESET VIEW</button>
-        </div>
+      <div className={`loading-state${loaded ? ' loading-state--complete' : ''}`} aria-live="polite">
+        <span>NULL//DRIVE</span>
+        <i />
+        <span>{loaded ? 'SYSTEM READY' : 'INITIALIZING'}</span>
+      </div>
 
-        <label className="rotation-control">
-          <span>ROOT ROTATION</span>
-          <input
-            aria-label="Root rotation"
-            type="range"
-            min="-180"
-            max="180"
-            value={rootRotation}
-            onChange={(event) => setRootRotation(Number(event.target.value))}
-          />
-          <output>{rootRotation}&deg;</output>
-          <button type="button" aria-label="Rotate root clockwise" onClick={() => setRootRotation((angle) => angle >= 135 ? -180 : angle + 45)}>
-            +45&deg;
-          </button>
-        </label>
+      <ChapterOne
+        debug={debug}
+        profile={profile}
+        reducedMotion={reducedMotion}
+        sceneApi={sceneApi}
+      />
 
-        <dl className="debug-panel">
-          <div><dt>GLB</dt><dd className={`status-${assetStatus}`}>{assetStatus.toUpperCase()}</dd></div>
-          <div><dt>MAJOR NODES</dt><dd>{nodeReport.found} / {EXPECTED_NODE_COUNT}</dd></div>
-          <div><dt>MODE</dt><dd>{mode.toUpperCase()}</dd></div>
-          <div><dt>RENDERER</dt><dd>WEBGL</dd></div>
-          <div><dt>TRIANGLES</dt><dd>{nodeReport.triangles.toLocaleString()}</dd></div>
-          <div><dt>TEXTURES</dt><dd>{nodeReport.textures}</dd></div>
-          {nodeReport.missing.length > 0 && <div className="missing"><dt>MISSING</dt><dd>{nodeReport.missing.join(', ')}</dd></div>}
-        </dl>
-      </footer>
+      <div className="future-chapters-placeholder" aria-hidden="true" />
     </main>
   )
 }
