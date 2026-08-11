@@ -3,9 +3,10 @@ import { useFrame, useThree } from '@react-three/fiber'
 import { NullDriveModel } from './NullDriveModel.jsx'
 import { SceneLighting } from './SceneLighting.jsx'
 import { HostMachine } from './HostMachine.jsx'
+import { HostInternals } from './HostInternals.jsx'
 
 function CameraRig({ cameraApi, profile }) {
-  const { camera } = useThree()
+  const { camera, invalidate, setFrameloop } = useThree()
   const target = useRef({ x: 0, y: 0, z: 0 })
 
   useEffect(() => {
@@ -15,8 +16,8 @@ function CameraRig({ cameraApi, profile }) {
     camera.far = 100
     camera.lookAt(0, 0, 0)
     camera.updateProjectionMatrix()
-    cameraApi.current = { camera, target: target.current }
-  }, [camera, profile])
+    cameraApi.current = { camera, invalidate, setFrameloop, target: target.current }
+  }, [camera, invalidate, profile, setFrameloop])
 
   useFrame(() => camera.lookAt(target.current.x, target.current.y, target.current.z))
 
@@ -27,24 +28,40 @@ export function NullDriveScene({ connectionProfile, debug, profile, onReady }) {
   const lightingApi = useRef({})
   const cameraApi = useRef({})
   const hostApi = useRef(null)
+  const internalsApi = useRef(null)
   const [modelApi, setModelApi] = useState(null)
   const [hostReady, setHostReady] = useState(false)
+  const [internalsReady, setInternalsReady] = useState(false)
 
   const handleHostReady = useCallback((api) => {
     hostApi.current = api
     setHostReady(true)
   }, [])
 
+  const handleInternalsReady = useCallback((api) => {
+    internalsApi.current = api
+    setInternalsReady(true)
+  }, [])
+
   useEffect(() => {
-    if (!modelApi || !hostReady || !cameraApi.current.camera) return
-    onReady({ ...modelApi, camera: cameraApi.current.camera, cameraTarget: cameraApi.current.target, host: hostApi.current })
-  }, [hostReady, modelApi, onReady])
+    if (!modelApi || !hostReady || !internalsReady || !cameraApi.current.camera) return
+    onReady({
+      ...modelApi,
+      camera: cameraApi.current.camera,
+      cameraTarget: cameraApi.current.target,
+      host: hostApi.current,
+      internals: internalsApi.current,
+      invalidate: cameraApi.current.invalidate,
+      setFrameloop: cameraApi.current.setFrameloop,
+    })
+  }, [hostReady, internalsReady, modelApi, onReady])
 
   return (
     <Suspense fallback={null}>
       <CameraRig cameraApi={cameraApi} profile={profile} />
       <SceneLighting lightingApi={lightingApi} />
       <HostMachine connectionProfile={connectionProfile} debug={debug} onReady={handleHostReady} />
+      <HostInternals onReady={handleInternalsReady} />
       <NullDriveModel profile={profile} lightingApi={lightingApi} onReady={setModelApi} />
     </Suspense>
   )

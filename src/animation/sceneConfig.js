@@ -97,6 +97,83 @@ export const LIGHTING_STATES = {
 
 export const CHAPTER_SCROLL_VH = 640
 export const CHAPTER_TWO_SCROLL_VH = 520
+export const CHAPTER_THREE_SCROLL_VH = 620
+export const CHAPTER_INTERNALS_SCROLL_VH = 520
+
+export const INTERNALS_CAMERA_PROFILES = {
+  desktop: {
+    entry: [-2.34, 0.22, 0.48],
+    entryTarget: [-1.48, 0.08, 0.42],
+    controller: [-1.62, 0.52, 1.14],
+    controllerTarget: [-1.12, 0.06, 0.4],
+    reveal: [-0.3, 1.42, 2.55],
+    revealTarget: [-0.05, 0, 0],
+    cpu: [-0.12, 0.7, 1.08],
+    cpuTarget: [0, 0.08, 0],
+    ram: [1.28, 0.64, 0.06],
+    ramTarget: [0.68, 0.06, -0.5],
+    gpu: [1.35, 0.68, 1.28],
+    gpuTarget: [0.68, 0.08, 0.5],
+    wide: [0, 1.88, 2.92],
+    wideTarget: [0, 0, 0],
+    abstract: [0, 2.18, 3.38],
+    abstractTarget: [0, 0, 0],
+  },
+  laptop: {
+    entry: [-2.42, 0.28, 0.62],
+    entryTarget: [-1.48, 0.08, 0.42],
+    controller: [-1.72, 0.58, 1.28],
+    controllerTarget: [-1.12, 0.06, 0.4],
+    reveal: [-0.2, 1.58, 2.9],
+    revealTarget: [0, 0, 0],
+    cpu: [-0.1, 0.8, 1.3],
+    cpuTarget: [0, 0.08, 0],
+    ram: [1.38, 0.72, 0.15],
+    ramTarget: [0.68, 0.06, -0.5],
+    gpu: [1.45, 0.78, 1.42],
+    gpuTarget: [0.68, 0.08, 0.5],
+    wide: [0, 2.05, 3.35],
+    wideTarget: [0, 0, 0],
+    abstract: [0, 2.35, 3.8],
+    abstractTarget: [0, 0, 0],
+  },
+  tablet: {
+    entry: [-2.55, 0.42, 0.92],
+    entryTarget: [-1.45, 0.08, 0.42],
+    controller: [-1.82, 0.72, 1.55],
+    controllerTarget: [-1.08, 0.06, 0.38],
+    reveal: [0, 2.15, 4.15],
+    revealTarget: [0, 0, 0],
+    cpu: [0, 1.05, 1.85],
+    cpuTarget: [0, 0.08, 0],
+    ram: [1.55, 0.95, 0.34],
+    ramTarget: [0.68, 0.06, -0.5],
+    gpu: [1.62, 1.02, 1.8],
+    gpuTarget: [0.68, 0.08, 0.5],
+    wide: [0, 2.9, 5.3],
+    wideTarget: [0, 0, 0],
+    abstract: [0, 3.25, 5.8],
+    abstractTarget: [0, 0, 0],
+  },
+  mobile: {
+    entry: [-2.72, 0.62, 1.3],
+    entryTarget: [-1.42, 0.08, 0.42],
+    controller: [-1.9, 0.9, 1.82],
+    controllerTarget: [-1.08, 0.06, 0.38],
+    reveal: [0, 3.55, 6.75],
+    revealTarget: [0, 0, 0],
+    cpu: [0, 1.4, 2.85],
+    cpuTarget: [0, 0.08, 0],
+    ram: [1.78, 1.2, 0.65],
+    ramTarget: [0.68, 0.06, -0.5],
+    gpu: [1.92, 1.28, 2.45],
+    gpuTarget: [0.68, 0.08, 0.5],
+    wide: [0, 4.3, 7.9],
+    wideTarget: [0, 0, 0],
+    abstract: [0, 4.75, 8.55],
+    abstractTarget: [0, 0, 0],
+  },
+}
 
 export const CONNECTION_PROFILES = {
   desktop: {

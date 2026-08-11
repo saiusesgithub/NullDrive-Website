@@ -3,6 +3,8 @@ import { Canvas } from '@react-three/fiber'
 import { NullDriveScene } from './components/three/NullDriveScene.jsx'
 import { ChapterOne } from './components/chapters/ChapterOne.jsx'
 import { ChapterTwo } from './components/chapters/ChapterTwo.jsx'
+import { ChapterThree } from './components/chapters/ChapterThree.jsx'
+import { ChapterHostInternals } from './components/chapters/ChapterHostInternals.jsx'
 import { useExperiencePreferences } from './hooks/useExperiencePreferences.js'
 
 class WebGLErrorBoundary extends Component {
@@ -74,6 +76,19 @@ export default function App() {
         connectionProfile={connectionProfile}
         debug={debug}
         profile={profile}
+        reducedMotion={reducedMotion}
+        sceneApi={sceneApi}
+      />
+
+      <ChapterHostInternals
+        debug={debug}
+        profileKey={profileKey}
+        reducedMotion={reducedMotion}
+        sceneApi={sceneApi}
+      />
+
+      <ChapterThree
+        debug={debug}
         reducedMotion={reducedMotion}
         sceneApi={sceneApi}
       />

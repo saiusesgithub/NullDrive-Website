@@ -224,6 +224,18 @@ body { overflow-x: hidden; }
 
 .future-chapters-placeholder { position: relative; z-index: 2; height: 1px; background: #020304; }
 
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
 .chapter-two {
   position: relative;
   z-index: 2;
@@ -321,6 +333,367 @@ body { overflow-x: hidden; }
 .chapter-two--reduced { height: 140vh; }
 .chapter-two--reduced .chapter-two-stage { position: sticky; top: 0; }
 
+.chapter-internals {
+  position: relative;
+  z-index: 6;
+  width: 100%;
+  height: var(--chapter-internals-scroll);
+  background: transparent;
+}
+
+.chapter-internals-stage {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+}
+
+.internals-entry-veil {
+  position: absolute;
+  z-index: 2;
+  inset: 0;
+  background:
+    radial-gradient(circle at 50% 50%, rgba(4, 16, 17, 0.96), #020304 40%),
+    #020304;
+}
+
+.internals-entry-signal {
+  position: absolute;
+  z-index: 7;
+  top: 50%;
+  left: 50%;
+  width: 118px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(85, 215, 211, 0.72));
+  transform: translate(-100%, -50%);
+  transform-origin: right center;
+}
+
+.internals-entry-signal i {
+  position: absolute;
+  top: -2px;
+  right: -3px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: #79eeea;
+  box-shadow: 0 0 12px rgba(85, 215, 211, 0.68);
+}
+
+.internals-copy {
+  position: absolute;
+  z-index: 6;
+  display: grid;
+  gap: 8px;
+}
+
+.internals-copy--detected { top: 11vh; left: clamp(40px, 6vw, 96px); }
+.internals-copy--resources { top: 10vh; right: clamp(40px, 6vw, 96px); text-align: right; }
+.internals-copy--execution { top: 9vh; left: 50%; text-align: center; transform: translateX(-50%); }
+.internals-copy span { color: #586a6e; font: 500 7px/1 ui-monospace, monospace; letter-spacing: 0.23em; }
+.internals-copy strong { color: #cbd2d3; font-size: clamp(19px, 2vw, 31px); font-weight: 520; letter-spacing: -0.03em; }
+
+.hardware-label {
+  position: absolute;
+  z-index: 6;
+  display: grid;
+  grid-template-columns: 9px auto;
+  gap: 5px 8px;
+  min-width: 145px;
+  padding: 10px 12px;
+  border: 1px solid rgba(94, 119, 123, 0.3);
+  color: #aeb8ba;
+  background: rgba(3, 7, 8, 0.72);
+  backdrop-filter: blur(5px);
+  font: 500 8px/1 ui-monospace, monospace;
+  letter-spacing: 0.17em;
+}
+
+.hardware-label i { align-self: center; width: 3px; height: 3px; border-radius: 50%; background: #55d7d3; box-shadow: 0 0 7px rgba(85, 215, 211, 0.5); }
+.hardware-label small { grid-column: 2; color: #536267; font-size: 6px; letter-spacing: 0.15em; }
+.hardware-label--usb { left: 12vw; bottom: 22vh; }
+.hardware-label--cpu { left: 48%; top: 25%; }
+.hardware-label--ram { right: 9vw; bottom: 20vh; }
+.hardware-label--gpu { right: 9vw; top: 24vh; }
+.hardware-label--nvme { left: 18vw; bottom: 16vh; }
+
+.internals-software-layer {
+  position: absolute;
+  z-index: 6;
+  top: 19vh;
+  left: 50%;
+  width: min(460px, 52vw);
+  padding: 20px 24px;
+  border: 1px solid rgba(85, 215, 211, 0.38);
+  background: linear-gradient(105deg, rgba(6, 18, 20, 0.88), rgba(8, 13, 14, 0.58));
+  box-shadow: 0 18px 70px rgba(0, 0, 0, 0.4);
+  transform: translateX(-50%);
+}
+
+.internals-software-layer span,
+.internals-software-layer small { display: block; color: #607276; font: 500 7px/1 ui-monospace, monospace; letter-spacing: 0.19em; }
+.internals-software-layer strong { display: block; margin: 10px 0 8px; color: #dce2e3; font-size: clamp(21px, 2.2vw, 34px); font-weight: 520; letter-spacing: -0.035em; }
+.software-link { position: absolute; top: 100%; width: 1px; height: 12vh; background: linear-gradient(#55d7d3, transparent); opacity: 0.36; }
+.software-link--a { left: 26%; }
+.software-link--b { left: 50%; }
+.software-link--c { left: 74%; }
+
+.internals-abstract-overlay {
+  position: absolute;
+  z-index: 4;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.internals-abstract-grid { fill: none; stroke: #243438; stroke-width: 0.6; opacity: 0.22; }
+.internals-abstract-traces { fill: none; stroke: #55d7d3; stroke-width: 1; opacity: 0.72; }
+.internals-abstract-nodes { fill: rgba(3, 9, 10, 0.68); stroke: #53686c; stroke-width: 1; }
+
+.internals-transition-copy {
+  position: absolute;
+  z-index: 7;
+  bottom: 10vh;
+  left: 50%;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  color: #708084;
+  font: 500 7px/1 ui-monospace, monospace;
+  letter-spacing: 0.2em;
+  transform: translateX(-50%);
+}
+
+.internals-transition-copy i { width: 72px; height: 1px; background: linear-gradient(90deg, #3d5c60, #55d7d3); }
+
+.internals-chapter-index {
+  position: absolute;
+  z-index: 7;
+  left: clamp(24px, 3vw, 48px);
+  bottom: clamp(22px, 3vh, 36px);
+  display: flex;
+  gap: 18px;
+  color: #3f4e52;
+  font: 500 7px/1 ui-monospace, monospace;
+  letter-spacing: 0.18em;
+}
+
+.chapter-internals--reduced { height: 170vh; }
+.chapter-internals--reduced .chapter-internals-stage { position: sticky; top: 0; }
+.chapter-internals--reduced .internals-entry-veil,
+.chapter-internals--reduced .internals-entry-signal,
+.chapter-internals--reduced .internals-copy,
+.chapter-internals--reduced .internals-abstract-overlay,
+.chapter-internals--reduced .internals-transition-copy { display: none; }
+
+.chapter-three {
+  position: relative;
+  z-index: 7;
+  width: 100%;
+  height: var(--chapter-three-scroll);
+  background: #020304;
+}
+
+.chapter-three-stage {
+  position: relative;
+  width: 100%;
+  height: 100svh;
+  overflow: hidden;
+  pointer-events: none;
+  isolation: isolate;
+  background:
+    radial-gradient(circle at 50% 48%, rgba(24, 39, 42, 0.15), transparent 38%),
+    #020304;
+}
+
+.chapter-three-stage::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  opacity: 0.45;
+  background:
+    linear-gradient(90deg, transparent 49.96%, rgba(92, 119, 124, 0.08) 50%, transparent 50.04%),
+    linear-gradient(0deg, transparent 49.96%, rgba(92, 119, 124, 0.06) 50%, transparent 50.04%);
+}
+
+.architecture-diagram {
+  position: absolute;
+  z-index: 1;
+  inset: clamp(18px, 2.4vw, 38px);
+}
+
+.architecture-svg {
+  width: 100%;
+  height: 100%;
+  overflow: visible;
+}
+
+.architecture-svg--mobile { display: none; }
+.architecture-grid { opacity: 0.14; }
+.architecture-grid-line { fill: none; stroke: #253338; stroke-width: 0.65; }
+
+.architecture-frame,
+.architecture-interface,
+.architecture-data-node rect,
+.architecture-host-interface rect,
+.architecture-hardware-node > rect,
+.architecture-local-model > rect {
+  fill: rgba(6, 10, 11, 0.72);
+  stroke: #34464b;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.architecture-frame { fill: rgba(4, 7, 8, 0.35); stroke: #243338; }
+.architecture-corner { fill: none; stroke: #607176; stroke-width: 1; vector-effect: non-scaling-stroke; }
+
+.architecture-path {
+  fill: none;
+  stroke: #405258;
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+}
+
+.architecture-path--inactive { opacity: 0.32; }
+.architecture-path--active { stroke: #55d7d3; stroke-width: 1.25; }
+
+.architecture-kicker,
+.architecture-index,
+.architecture-node-id,
+.architecture-interface-meta,
+.architecture-microcopy,
+.architecture-ambient text {
+  fill: #596b70;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.18em;
+}
+
+.architecture-title {
+  fill: #c7d0d1;
+  font-family: Inter, "Helvetica Neue", sans-serif;
+  font-size: 18px;
+  font-weight: 530;
+  letter-spacing: 0.08em;
+}
+
+.architecture-index { text-anchor: end; font-size: 7px; }
+.architecture-microcopy { font-size: 6.5px; letter-spacing: 0.14em; }
+
+.architecture-data-node text,
+.architecture-host-interface text,
+.architecture-hardware-node text {
+  fill: #9da9ab;
+  font-family: ui-monospace, SFMono-Regular, Consolas, monospace;
+  font-size: 9px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+}
+
+.architecture-data-node circle,
+.architecture-host-interface circle { fill: #55d7d3; }
+.architecture-data-node .architecture-node-id,
+.architecture-hardware-node .architecture-node-id { fill: #53656a; font-size: 7px; text-anchor: end; }
+
+.architecture-interface { stroke: #53696e; }
+.architecture-interface-label,
+.architecture-interface-meta { text-anchor: middle; }
+.architecture-interface-label { fill: #aebabc; font: 600 10px/1 ui-monospace, monospace; letter-spacing: 0.16em; }
+.architecture-interface-meta { font-size: 6px; }
+
+.architecture-signal-point,
+.architecture-signal-packet {
+  fill: #78ebe7;
+  filter: drop-shadow(0 0 5px rgba(85, 215, 211, 0.7));
+}
+
+.architecture-hardware-node > rect { stroke: #4a5d62; }
+.architecture-node-detail { fill: none; stroke: #61777b; stroke-width: 0.8; vector-effect: non-scaling-stroke; }
+.architecture-node-detail rect { fill: rgba(85, 215, 211, 0.06); }
+.architecture-hardware-node--cpu > rect { stroke: #668085; }
+.architecture-hardware-node--ram > rect { stroke: #52676c; }
+.architecture-hardware-node--gpu > rect { stroke: #5b7075; }
+
+.architecture-local-model > rect { fill: rgba(8, 17, 19, 0.82); stroke: #55a6a7; stroke-dasharray: 5 5; }
+.architecture-local-model > path { fill: none; stroke: #55d7d3; stroke-width: 1; }
+.architecture-local-model .architecture-title { fill: #d8e0e1; }
+.architecture-local-model .architecture-node-id { text-anchor: end; }
+.architecture-ambient { fill: none; stroke: #27383c; opacity: 0.55; }
+.architecture-ambient text { stroke: none; font-size: 6px; }
+
+.architecture-copy {
+  position: absolute;
+  z-index: 4;
+  display: grid;
+  gap: 7px;
+}
+
+.architecture-copy--carry { top: 8vh; left: clamp(42px, 6vw, 100px); }
+.architecture-copy--host { top: 8vh; right: clamp(42px, 6vw, 100px); text-align: right; }
+.architecture-copy span { color: #56686d; font: 500 7px/1 ui-monospace, monospace; letter-spacing: 0.22em; }
+.architecture-copy strong { color: #c6cecf; font-size: clamp(17px, 1.7vw, 27px); font-weight: 520; letter-spacing: -0.025em; }
+.architecture-copy p { margin: 0; color: #78878a; font: 500 8px/1 ui-monospace, monospace; letter-spacing: 0.17em; }
+
+.architecture-final-copy {
+  position: absolute;
+  z-index: 5;
+  top: clamp(28px, 5vh, 54px);
+  left: 50%;
+  width: min(82vw, 1040px);
+  text-align: center;
+  transform: translateX(-50%);
+}
+
+.architecture-final-copy p {
+  display: flex;
+  justify-content: center;
+  gap: clamp(16px, 3.4vw, 58px);
+  margin: 0;
+  overflow: hidden;
+  color: #d8dede;
+  font-size: clamp(24px, 3vw, 48px);
+  font-weight: 520;
+  line-height: 0.95;
+  letter-spacing: -0.045em;
+}
+
+.architecture-final-copy span { display: inline-block; }
+.architecture-final-copy strong { display: block; margin-top: 13px; color: #6c7c80; font: 500 8px/1 ui-monospace, monospace; letter-spacing: 0.22em; opacity: 0; }
+
+.architecture-status {
+  position: absolute;
+  z-index: 4;
+  right: clamp(28px, 4vw, 68px);
+  bottom: clamp(22px, 3.2vh, 38px);
+  display: flex;
+  gap: 20px;
+  color: #64767a;
+  font: 500 7px/1 ui-monospace, monospace;
+  letter-spacing: 0.15em;
+}
+
+.architecture-status span::before { content: ''; display: inline-block; width: 3px; height: 3px; margin: 0 8px 1px 0; border-radius: 50%; background: #55d7d3; }
+
+.architecture-chapter-index {
+  position: absolute;
+  z-index: 4;
+  left: clamp(24px, 3vw, 48px);
+  bottom: clamp(22px, 3.2vh, 38px);
+  display: flex;
+  gap: 18px;
+  color: #405055;
+  font: 500 7px/1 ui-monospace, monospace;
+  letter-spacing: 0.18em;
+}
+
+.chapter-three--reduced { height: 155vh; }
+.chapter-three--reduced .chapter-three-stage { position: sticky; top: 0; }
+.chapter-three--reduced .architecture-copy { display: none; }
+
 .chapter-one--reduced { height: 120vh; }
 .chapter-one--reduced .chapter-stage { position: sticky; top: 0; }
 .chapter-one--reduced .hero-line-mask--private { top: 11vh; }
@@ -368,6 +741,58 @@ body { overflow-x: hidden; }
   .connected-label { top: 13vh; left: 7vw; }
   .power-copy { right: 12vw; bottom: 19vh; font-size: 26px; }
   .handoff-signal { left: calc(50% - 60px); width: 120px; }
+  .internals-entry-signal { width: 74px; }
+  .internals-copy--detected,
+  .internals-copy--resources,
+  .internals-copy--execution { top: 8vh; left: 7vw; right: auto; text-align: left; transform: none; }
+  .internals-copy strong { font-size: 21px; }
+  .hardware-label { min-width: 128px; padding: 8px 10px; font-size: 7px; }
+  .hardware-label--usb { left: 7vw; bottom: 20vh; }
+  .hardware-label--cpu { left: 7vw; top: 19vh; }
+  .hardware-label--ram { right: 7vw; bottom: 18vh; }
+  .hardware-label--gpu { right: 7vw; top: 20vh; }
+  .hardware-label--nvme { left: 7vw; bottom: 15vh; }
+  .internals-software-layer { top: 15vh; width: 86vw; padding: 16px 18px; }
+  .internals-software-layer strong { font-size: 24px; }
+  .internals-transition-copy { bottom: 11vh; gap: 8px; width: 86vw; justify-content: center; font-size: 5.5px; }
+  .internals-transition-copy i { width: 28px; }
+  .internals-chapter-index { left: 7vw; bottom: 22px; display: grid; gap: 5px; font-size: 5.5px; }
+
+  .chapter-three-stage {
+    background:
+      radial-gradient(circle at 50% 28%, rgba(24, 39, 42, 0.15), transparent 34%),
+      #020304;
+  }
+  .architecture-diagram { inset: 18px 10px 58px; }
+  .architecture-svg--desktop { display: none; }
+  .architecture-svg--mobile { display: block; }
+  .architecture-grid { opacity: 0.11; }
+  .architecture-title { font-size: 13px; }
+  .architecture-kicker { font-size: 7px; }
+  .architecture-data-node text,
+  .architecture-host-interface text,
+  .architecture-hardware-node text { font-size: 7px; }
+  .architecture-node-detail { stroke-width: 0.6; }
+  .architecture-copy--carry,
+  .architecture-copy--host {
+    top: 7vh;
+    left: 7vw;
+    right: auto;
+    text-align: left;
+  }
+  .architecture-copy strong { font-size: 18px; }
+  .architecture-final-copy { top: 4vh; width: 88vw; }
+  .architecture-final-copy p { display: grid; gap: 3px; font-size: 26px; }
+  .architecture-final-copy strong { margin-top: 9px; font-size: 6px; }
+  .architecture-status {
+    right: 7vw;
+    bottom: 23px;
+    display: grid;
+    gap: 5px;
+    font-size: 5.5px;
+    text-align: right;
+  }
+  .architecture-chapter-index { left: 7vw; bottom: 23px; display: grid; gap: 5px; font-size: 5.5px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
